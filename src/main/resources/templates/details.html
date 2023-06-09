@@ -32,9 +32,11 @@
                             </div>
                             <div class="row mt-2" >
                                 <div class="col-12">
-                                    <input type="text" class="form-control" name="author" placeholder="Author"
-                                           th:value="${muzyka.author}"
-                                           required>
+                                    <select class="form-select" name="authorModel.id">
+                                        <option th:each="authors :${authors}" th:value="${authors.id}"
+                                                th:text="${authors.fullName+' / '+authors.nickName}"
+                                                th:selected="${muzyka.authorModel.id==authors.id}"></option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="row">

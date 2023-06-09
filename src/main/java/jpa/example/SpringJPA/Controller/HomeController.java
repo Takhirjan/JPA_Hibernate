@@ -1,9 +1,12 @@
 package jpa.example.SpringJPA.Controller;
 
+import jpa.example.SpringJPA.Model.AuthorModel;
 import jpa.example.SpringJPA.Model.MusicModel;
+import jpa.example.SpringJPA.repository.AuthorModelRepository;
 import jpa.example.SpringJPA.repository.MusicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +21,12 @@ public class HomeController {
 
   @Autowired
   private MusicRepository musicRepository;
+  @Autowired
+  private AuthorModelRepository authorModelRepository;
   @GetMapping(value = "/") // @WebServlet(value = "/") + doGet()
   public String indexPage(Model model) {
-    List <MusicModel> musicModelList=musicRepository.findAll();
+//    List <MusicModel> musicModelList=musicRepository.findAll();
+    List <MusicModel> musicModelList=musicRepository.findAllByDurationGreaterThan(0);
     model.addAttribute("musics", musicModelList);;
     return "index";
   }
@@ -31,14 +37,18 @@ public class HomeController {
   }
   @GetMapping(value = "/add-music")
   public String addMudicPage(Model model) {
-    return "addmusic";
+  List<AuthorModel> authorModels=authorModelRepository.findAll();
+  model.addAttribute("authors",authorModels);
+  return "addmusic";
   }
 
   @GetMapping(value = "/details/{musicId}")
   public String musicDetails(@PathVariable(name = "musicId") Long id, Model model) {
     MusicModel musicModel=musicRepository.findById(id).orElse(null);
-
     model.addAttribute("muzyka", musicModel);
+
+    List<AuthorModel> authorModels=authorModelRepository.findAll();
+    model.addAttribute("authors",authorModels);
     return "details";
   }
   @PostMapping(value = "/save-music")

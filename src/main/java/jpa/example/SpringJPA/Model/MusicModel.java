@@ -15,11 +15,21 @@ public class MusicModel {
   private Long id;
 
  @Column(name = "music_name")
-  private String name;
+  private String  name;
 
  @Column(name = "duration")
   private int duration;
 
- @Column(name = "author")
-  private String author;
+ @ManyToOne
+ private AuthorModel authorModel;
+//
+// @Column(name = "author")
+//  private String author;
+
+ @PrePersist
+ public void checkForNegativeDuration(){
+  if(this.duration<=0){
+   this.duration=180;
+  }
+ }
 }

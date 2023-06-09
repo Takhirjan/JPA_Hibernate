@@ -24,9 +24,11 @@ public class HomeController {
   @Autowired
   private AuthorModelRepository authorModelRepository;
   @GetMapping(value = "/") // @WebServlet(value = "/") + doGet()
-  public String indexPage(Model model) {
+  public String indexPage(Model model,
+                          @RequestParam(name = "key",required = false,defaultValue = "")String key) {
 //    List <MusicModel> musicModelList=musicRepository.findAll();
-    List <MusicModel> musicModelList=musicRepository.findAllByDurationGreaterThan(0);
+//    List <MusicModel> musicModelList=musicRepository.findAllByDurationGreaterThan(0);
+    List <MusicModel> musicModelList=musicRepository.searchMusics("%"+key+"%");
     model.addAttribute("musics", musicModelList);;
     return "index";
   }

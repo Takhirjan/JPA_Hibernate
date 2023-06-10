@@ -3,95 +3,132 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <div th:insert="~{head.html}"></div>
 <div th:insert="~{navbar.html}"></div>
+<div layout:fragment="siteContent"></div>
+<div class="row" th:if="${muzyka!=null}">
+    <div class="col-6">
+        <table class="table">
+            <tr th:each="genre:${genres}">
+                <form th:action="@{/assign-genre}" method="post">
+                    <input type="hidden" name="music_id" th:value="${muzyka.id}">
+                    <input type="hidden" name="genre_id" th:value="${genre.id}">
+
+                    <td th:text="${genre.name+' / '+genre.code}"></td>
+                    <td style="width: 10%">
+                        <button class="btn btn-success btn-sm">>>></button>
+                    </td>
+                </form>
+
+            </tr>
+        </table>
+        <table class="table">
+            <tr th:each="genre:${muzyka.genres}">
+                <form th:action="@{/unassign-genre}" method="post">
+                    <td style="width: 10%">
+                        <button class="btn btn-danger btn-sm"><<<</button>
+                    </td>
+                    <input type="hidden" name="music_id" th:value="${muzyka.id}">
+                    <input type="hidden" name="genre_id" th:value="${genre.id}">
+
+                    <td th:text="${genre.name+' / '+genre.code}"></td>
+
+                </form>
+
+            </tr>
+        </table>
+    </div>
+    <div class="col-6">
+
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-9 mx-auto">
         <div class="row">
-            <div class="col-9 mx-auto">
-                <div class="row">
-                    <div class="col-8 mx-auto">
-                        <form action="/save-music" method="post" th:if="${muzyka!=null}">
-                            <input type="hidden" name="id" th:value="${muzyka.id}">
-                            <div class="row">
-                                <div class="col-12">
-                                    <label>
-                                        NAME:
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row mt-2" >
-                                <div class="col-12">
-                                    <input type="text" class="form-control" name="name" placeholder="Name" readonly
-                                           th:value="${muzyka.name}"
-                                           required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <label>
-                                        Author
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row mt-2" >
-                                <div class="col-12">
-                                    <select class="form-select" name="authorModel.id">
-                                        <option th:each="authors :${authors}" th:value="${authors.id}"
-                                                th:text="${authors.fullName+' / '+authors.nickName}"
-                                                th:selected="${muzyka.authorModel.id==authors.id}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <label>
-                                        Duration:
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row mt-2" >
-                                <div class="col-12">
-                                    <input type="number" class="form-control" name="duration" placeholder="Duration"
-                                           th:value="${muzyka.duration}"
-                                           required>
-                                </div>
-                            </div>
-                            <div class="row mt-3" >
-                                <div class="col-12">
-                                    <button class="btn btn-success">Save music</button>
+            <div class="col-8 mx-auto">
+                <form action="/save-music" method="post" th:if="${muzyka!=null}">
+                    <input type="hidden" name="id" th:value="${muzyka.id}">
+                    <div class="row">
+                        <div class="col-12">
+                            <label>
+                                NAME:
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row mt-2" >
+                        <div class="col-12">
+                            <input type="text" class="form-control" name="name" placeholder="Name" readonly
+                                   th:value="${muzyka.name}"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label>
+                                Author
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row mt-2" >
+                        <div class="col-12">
+                            <select class="form-select" name="authorModel.id">
+                                <option th:each="authors :${authors}" th:value="${authors.id}"
+                                        th:text="${authors.fullName+' / '+authors.nickName}"
+                                        th:selected="${muzyka.authorModel.id==authors.id}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label>
+                                Duration:
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row mt-2" >
+                        <div class="col-12">
+                            <input type="number" class="form-control" name="duration" placeholder="Duration"
+                                   th:value="${muzyka.duration}"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="row mt-3" >
+                        <div class="col-12">
+                            <button class="btn btn-success">Save music</button>
 
-                                    <button type="button" class="btn btn-danger ms-2"
-                                            data-bs-toggle="modal" data-bs-target="#exampleModal">DELETE music</button>
-                                </div>
-                            </div>
-                        </form>
+                            <button type="button" class="btn btn-danger ms-2"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal">DELETE music</button>
+                        </div>
+                    </div>
+                </form>
 
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                             aria-hidden="true" th:if="${muzyka!=null}">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <form th:action="@{'/delete-music'}" method="post">
-                                    <input type="hidden" name="id" th:value="${muzyka.id}">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm delete</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h3 class="text-center">Are you sure?</h3>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                                        <button  class="btn btn-danger">Yes</button>
-                                    </div>
-                                    </form>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true" th:if="${muzyka!=null}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form th:action="@{'/delete-music'}" method="post">
+                                <input type="hidden" name="id" th:value="${muzyka.id}">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm delete</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                            </div>
+                                <div class="modal-body">
+                                    <h3 class="text-center">Are you sure?</h3>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                    <button  class="btn btn-danger">Yes</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-
-                <h4 th:if="${muzyka==null}" class="text-center">
-                    Music  not found
-                </h4>
             </div>
         </div>
+
+        <h4 th:if="${muzyka==null}" class="text-center">
+            Music  not found
+        </h4>
     </div>
+</div>
+</div>
 </html>

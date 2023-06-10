@@ -18,5 +18,6 @@ public interface MusicRepository extends JpaRepository<MusicModel,Long> {
           "SELECT  mm  FROM MusicModel  mm " +
           "WHERE mm.duration>0 and lower( mm.name) LIKE lower( :searchName)"+
           "order by mm.duration desc")
+
   List<MusicModel> searchMusics(@Param("searchName") String musicName);
 }
